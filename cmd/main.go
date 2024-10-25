@@ -60,8 +60,8 @@ func main() {
 	docs.SwaggerInfo.BasePath = "/"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(files.Handler))
 
-	fmt.Println("Server running on port 8080...")
-	if err := r.Run(":8080"); err != nil {
+	fmt.Println("Server running on port 49253...")
+	if err := r.Run(":49253"); err != nil {
 		log.Fatalf("failed to start server: %v", err)
 	}
 }
