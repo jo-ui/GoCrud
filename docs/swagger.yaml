@@ -1,0 +1,193 @@
+basePath: /
+definitions:
+  domain.Person:
+    properties:
+      age:
+        type: integer
+      hobbies:
+        items:
+          type: string
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+    required:
+    - age
+    - name
+    type: object
+  handler.APIMessage:
+    properties:
+      message:
+        type: string
+    type: object
+  service.CreatePersonRequest:
+    properties:
+      age:
+        example: 25
+        maximum: 120
+        minimum: 0
+        type: integer
+      hobbies:
+        items:
+          type: string
+        type: array
+      name:
+        example: John Doe
+        maxLength: 100
+        minLength: 2
+        type: string
+    required:
+    - age
+    - hobbies
+    - name
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample CRUD API for managing persons.
+  title: Person CRUD API
+  version: "1.0"
+paths:
+  /person:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all persons with pagination and sorting options
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Records per page
+        in: query
+        name: limit
+        type: integer
+      - default: name
+        description: Field to sort by
+        in: query
+        name: sortedBy
+        type: string
+      - default: asc
+        description: Sort order
+        in: query
+        name: sortedOrder
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'data": []domain.Person, "current_page": int, "total_pages":
+            int, "total_records": int64'
+          schema:
+            $ref: '#/definitions/handler.APIMessage'
+        "500":
+          description: 'error": "Internal Server Error'
+          schema:
+            $ref: '#/definitions/handler.APIMessage'
+      summary: Get all persons
+      tags:
+      - Person
+    post:
+      consumes:
+      - application/json
+      description: Create a new person record in the database
+      parameters:
+      - description: Create Person Request
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/service.CreatePersonRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Person'
+        "400":
+          description: 'error": "Invalid request format or validation error'
+          schema:
+            $ref: '#/definitions/handler.APIMessage'
+        "500":
+          description: 'error": "Internal Server Error'
+          schema:
+            $ref: '#/definitions/handler.APIMessage'
+      summary: Create a new person
+      tags:
+      - Person
+  /person/{id}:
+    delete:
+      description: Delete a person by their unique ID.
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "404":
+          description: 'error": "Person not found'
+          schema:
+            $ref: '#/definitions/handler.APIMessage'
+      summary: Delete person by ID
+      tags:
+      - Person
+    get:
+      description: Retrieve a person by their unique ID.
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Person'
+        "404":
+          description: 'error": "Person not found'
+          schema:
+            $ref: '#/definitions/handler.APIMessage'
+      summary: Get person by ID
+      tags:
+      - Person
+    put:
+      description: Update a person's details by their unique ID.
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update Person Request
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/service.CreatePersonRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Person'
+        "400":
+          description: 'error": "Invalid request'
+          schema:
+            $ref: '#/definitions/handler.APIMessage'
+        "404":
+          description: 'error": "Person not found'
+          schema:
+            $ref: '#/definitions/handler.APIMessage'
+      summary: Update person by ID
+      tags:
+      - Person
+swagger: "2.0"
