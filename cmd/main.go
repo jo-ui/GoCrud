@@ -26,6 +26,8 @@ import (
 // @host localhost:8080
 // @BasePath /
 func main() {
+	gin.SetMode(gin.ReleaseMode)
+	
 	r := gin.Default()
 
 	// cross-site resource sharing
